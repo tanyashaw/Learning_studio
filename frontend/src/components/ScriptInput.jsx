@@ -70,12 +70,7 @@ export default function ScriptInput({ form, setForm, onSubmit, loading, error })
         {loading ? "Building the journey…" : "Build the learner journey"}
       </button>
 
-      <p className="helper-note">
-        This calls your own backend at <code>/api/generate-journey</code>, which
-        uses the Anthropic API with your <code>ANTHROPIC_API_KEY</code> to
-        structure the script into modules, lessons, quizzes, and a positioning
-        summary.
-      </p>
+
     </form>
   );
 }

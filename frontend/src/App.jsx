@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { generateJourney } from "./api";
 import ModuleDetail from "./components/ModuleDetail";
 import PositioningCard from "./components/PositioningCard";
@@ -12,10 +12,19 @@ const DEFAULT_FORM = {
 };
 
 export default function App() {
-  const [form, setForm] = useState(DEFAULT_FORM);
-  const [journey, setJourney] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [form, setForm]           = useState(DEFAULT_FORM);
+  const [journey, setJourney]     = useState(null);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState("");
+  const [page, setPage]           = useState(0);
+  const [direction, setDirection] = useState("forward"); // "forward" | "backward"
+  const [animKey, setAnimKey]     = useState(0);          // forces re-mount for animation
+  const panelRef                  = useRef(null);
+
+  // scroll to top of the journey panel each time we change page
+  useEffect(() => {
+    panelRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -26,12 +35,25 @@ export default function App() {
         moduleTarget: Number(form.moduleTarget),
       });
       setJourney(data);
+      setPage(0);
+      setDirection("forward");
+      setAnimKey((k) => k + 1);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const navigate = (targetPage, dir) => {
+    setDirection(dir);
+    setAnimKey((k) => k + 1);
+    setPage(targetPage);
+  };
+
+  const goNext = (max) => navigate(Math.min(page + 1, max), "forward");
+  const goPrev = ()      => navigate(Math.max(page - 1, 0), "backward");
+  const goTo   = (idx)   => navigate(idx, idx > page ? "forward" : "backward");
 
   return (
     <div className="app-shell">
@@ -51,7 +73,9 @@ export default function App() {
           error={error}
         />
 
-        <main className="journey-panel">
+        <main className="journey-panel" ref={panelRef}>
+
+          {/* ── Loading ── */}
           {loading && (
             <div className="loading-row">
               <span className="spinner" />
@@ -59,6 +83,7 @@ export default function App() {
             </div>
           )}
 
+          {/* ── Empty state ── */}
           {!journey && !loading && (
             <div className="journey-empty">
               <div className="compass">🧭</div>
@@ -68,52 +93,133 @@ export default function App() {
             </div>
           )}
 
-          {journey && !loading && (
-            <>
-              {/* ── Program overview ── */}
-              <div className="journey-header">
-                <h1 className="program-title">{journey.programTitle}</h1>
-                <p className="program-summary">{journey.programSummary}</p>
-                <div className="objective-pills">
-                  {journey.learningObjectives.map((obj, i) => (
-                    <span className="objective-pill" key={i}>
-                      {obj}
-                    </span>
-                  ))}
+          {journey && !loading && (() => {
+            const modules      = journey.modules;
+            const lastPage     = modules.length;           // positioning page
+            const isPositioning = page === lastPage;
+            const isFirst      = page === 0;
+            const isLastModule = page === lastPage - 1;
+
+            return (
+              <>
+                {/* ── Program header ── */}
+                <div className="journey-header">
+                  <h1 className="program-title">{journey.programTitle}</h1>
+                  <p className="program-summary">{journey.programSummary}</p>
+
+                  {journey.journeyArc && (
+                    <div className="journey-arc-banner">
+                      <span className="journey-arc-label">🗺 Learner Journey Arc</span>
+                      <p className="journey-arc-text">{journey.journeyArc}</p>
+                    </div>
+                  )}
+
                 </div>
 
-                {/* Module navigation quick-jump */}
-                <div className="module-nav">
-                  {journey.modules.map((mod, i) => (
-                    <a
-                      key={i}
-                      href={`#module-${i + 1}`}
-                      className="module-nav-chip"
+                {/* ── Animated page content ── */}
+                <div
+                  key={animKey}
+                  className={`page-view page-view--${direction}`}
+                >
+                  {/* Module page */}
+                  {!isPositioning && (
+                    <ModuleDetail
+                      module={modules[page]}
+                      index={page}
+                    />
+                  )}
+
+                  {/* Positioning page */}
+                  {isPositioning && (
+                    <PositioningCard positioning={journey.positioning} />
+                  )}
+
+                  {/* ── Bottom nav bar ── */}
+                  <div className="page-nav">
+
+                    {/* LEFT — previous */}
+                    <button
+                      type="button"
+                      className="page-nav-btn page-nav-btn--prev"
+                      onClick={goPrev}
+                      disabled={isFirst}
                     >
-                      <span className="module-nav-num">{i + 1}</span>
-                      {mod.title}
-                    </a>
-                  ))}
-                  <a href="#positioning" className="module-nav-chip final">
-                    <span className="module-nav-num">⚑</span>
-                    Positioning
-                  </a>
+                      <span className="pnb-arrow">←</span>
+                      <span className="pnb-inner">
+                        <span className="pnb-hint">Previous</span>
+                        <span className="pnb-title">
+                          {isFirst
+                            ? "Start"
+                            : isPositioning
+                            ? `Module ${modules.length}: ${modules[modules.length - 1].title}`
+                            : `Module ${page}: ${modules[page - 1].title}`}
+                        </span>
+                      </span>
+                    </button>
+
+                    {/* CENTRE — dots */}
+                    <div className="page-nav-indicator">
+                      {modules.map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          className={`page-dot${page === i ? " page-dot--active" : page > i ? " page-dot--done" : ""}`}
+                          onClick={() => goTo(i)}
+                          title={`Module ${i + 1}`}
+                        />
+                      ))}
+                      <button
+                        type="button"
+                        className={`page-dot page-dot--final${isPositioning ? " page-dot--active" : ""}`}
+                        onClick={() => goTo(lastPage)}
+                        title="Positioning"
+                      />
+                    </div>
+
+                    {/* RIGHT — next / finish / restart */}
+                    {isPositioning ? (
+                      <button
+                        type="button"
+                        className="page-nav-btn page-nav-btn--restart"
+                        onClick={() => goTo(0)}
+                      >
+                        <span className="pnb-inner">
+                          <span className="pnb-hint">Restart</span>
+                          <span className="pnb-title">Back to Module 1</span>
+                        </span>
+                        <span className="pnb-arrow">↺</span>
+                      </button>
+                    ) : isLastModule ? (
+                      <button
+                        type="button"
+                        className="page-nav-btn page-nav-btn--finish"
+                        onClick={() => goNext(lastPage)}
+                      >
+                        <span className="pnb-inner">
+                          <span className="pnb-hint">Final step</span>
+                          <span className="pnb-title">View Market Positioning</span>
+                        </span>
+                        <span className="pnb-arrow">⚑</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="page-nav-btn page-nav-btn--next"
+                        onClick={() => goNext(lastPage)}
+                      >
+                        <span className="pnb-inner">
+                          <span className="pnb-hint">Up next</span>
+                          <span className="pnb-title">Module {page + 2}: {modules[page + 1].title}</span>
+                        </span>
+                        <span className="pnb-arrow">→</span>
+                      </button>
+                    )}
+
+                  </div>
                 </div>
-              </div>
-
-              {/* ── All modules stacked ── */}
-              <div className="modules-stack">
-                {journey.modules.map((mod, i) => (
-                  <ModuleDetail key={i} module={mod} index={i} />
-                ))}
-              </div>
-
-              {/* ── Positioning card ── */}
-              <div id="positioning">
-                <PositioningCard positioning={journey.positioning} />
-              </div>
-            </>
-          )}
+              </>
+            );
+          })()}
         </main>
       </div>
     </div>
