@@ -8,7 +8,7 @@ const FORMAT_ICONS = {
 };
 
 const FORMAT_COLORS = {
-  video:       { color: "#e8a63c", bg: "rgba(232,166,60,0.08)",  border: "rgba(232,166,60,0.25)" },
+  video:       { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  border: "rgba(56,189,248,0.25)" },
   interactive: { color: "#4fae91", bg: "rgba(79,174,145,0.08)",  border: "rgba(79,174,145,0.25)" },
   scenario:    { color: "#a78bfa", bg: "rgba(167,139,250,0.08)", border: "rgba(167,139,250,0.25)" },
   reading:     { color: "#60a5fa", bg: "rgba(96,165,250,0.08)",  border: "rgba(96,165,250,0.25)" },

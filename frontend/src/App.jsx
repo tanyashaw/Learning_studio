@@ -3,6 +3,7 @@ import { generateJourney } from "./api";
 import ModuleDetail from "./components/ModuleDetail";
 import PositioningCard from "./components/PositioningCard";
 import ScriptInput from "./components/ScriptInput";
+import LandingPage from "./components/LandingPage";
 
 const DEFAULT_FORM = {
   script: "",
@@ -12,6 +13,7 @@ const DEFAULT_FORM = {
 };
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [form, setForm]           = useState(DEFAULT_FORM);
   const [journey, setJourney]     = useState(null);
   const [loading, setLoading]     = useState(false);
@@ -55,13 +57,26 @@ export default function App() {
   const goPrev = ()      => navigate(Math.max(page - 1, 0), "backward");
   const goTo   = (idx)   => navigate(idx, idx > page ? "forward" : "backward");
 
+  if (!isAuthenticated) {
+    return <LandingPage onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
         <div className="wordmark">
           Learner Journey <span>Studio</span>
         </div>
-        <div className="tagline">Script → structured course → market-ready</div>
+        <div className="topbar-right">
+          <button
+            type="button"
+            className="logout-btn"
+            onClick={() => setIsAuthenticated(false)}
+            title="Sign Out"
+          >
+            Sign Out 🚪
+          </button>
+        </div>
       </header>
 
       <div className="layout">

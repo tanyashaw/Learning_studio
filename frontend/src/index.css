@@ -1,12 +1,12 @@
 :root {
-  --ink: #0f1719;
-  --surface: #16211f;
-  --surface-raised: #1d2b28;
-  --surface-line: #2a3936;
+  --ink: #0a0f12;
+  --surface: #121a1f;
+  --surface-raised: #18232a;
+  --surface-line: #24343f;
   --paper: #f4efe1;
-  --paper-dim: #a8b6ac;
-  --amber: #e8a63c;
-  --amber-dim: #7a5f2c;
+  --paper-dim: #94a3b8;
+  --amber: #38bdf8;
+  --amber-dim: #0284c7;
   --teal: #4fae91;
   --teal-dim: #2c463c;
   --danger: #d4695a;
@@ -32,7 +32,7 @@ body,
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232, 166, 60, 0.08), transparent),
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(56, 189, 248, 0.08), transparent),
     radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79, 174, 145, 0.08), transparent),
     var(--ink);
   color: var(--paper);
@@ -188,20 +188,22 @@ button {
 
 .btn-primary {
   margin-top: 0.25rem;
-  background: var(--amber);
-  color: var(--ink);
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #ffffff;
   border: none;
-  border-radius: 6px;
-  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #f2b658;
+  background: linear-gradient(135deg, #0369a1, #1d4ed8);
 }
+
 
 .btn-primary:active:not(:disabled) {
   transform: translateY(1px);
@@ -403,8 +405,8 @@ button {
 .module-overview {
   margin: 1rem 1.5rem;
   padding: 1rem 1.25rem;
-  background: rgba(232, 166, 60, 0.05);
-  border: 1px solid rgba(232, 166, 60, 0.18);
+  background: rgba(56, 189, 248, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.18);
   border-radius: 10px;
 }
 
@@ -892,8 +894,8 @@ button {
   color: var(--paper);
   margin: 0.75rem 0 0;
   padding: 0.85rem 1rem;
-  background: rgba(232, 166, 60, 0.05);
-  border: 1px solid rgba(232, 166, 60, 0.15);
+  background: rgba(56, 189, 248, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.15);
   border-radius: 8px;
 }
 
@@ -973,7 +975,7 @@ button {
 .journey-arc-banner {
   margin: 1.25rem 0;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, rgba(79,174,145,0.08), rgba(232,166,60,0.06));
+  background: linear-gradient(135deg, rgba(79,174,145,0.08), rgba(56,189,248,0.06));
   border: 1px solid rgba(79,174,145,0.25);
   border-radius: 10px;
 }
@@ -1004,8 +1006,8 @@ button {
   gap: 0.5rem;
   margin: 0 1.5rem 0.75rem;
   padding: 0.5rem 0.85rem;
-  background: rgba(232, 166, 60, 0.06);
-  border: 1px solid rgba(232, 166, 60, 0.22);
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.22);
   border-radius: 8px;
   font-size: 0.82rem;
   color: var(--paper-dim);
@@ -1110,8 +1112,8 @@ button {
 }
 
 .launch-checklist-block {
-  background: rgba(232, 166, 60, 0.04);
-  border-color: rgba(232, 166, 60, 0.2);
+  background: rgba(56, 189, 248, 0.04);
+  border-color: rgba(56, 189, 248, 0.2);
 }
 
 .launch-checklist {
@@ -1137,8 +1139,8 @@ button {
   font-size: 0.68rem;
   font-weight: 700;
   color: var(--amber);
-  background: rgba(232, 166, 60, 0.12);
-  border: 1px solid rgba(232, 166, 60, 0.25);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
   border-radius: 4px;
   padding: 0.1rem 0.4rem;
   flex-shrink: 0;
@@ -1471,3 +1473,437 @@ button {
     margin-bottom: 0.25rem;
   }
 }
+
+/* ============================================================
+   Top Bar Right & Logout Button
+   ============================================================ */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logout-btn {
+  background: rgba(212, 105, 90, 0.1);
+  border: 1px solid rgba(212, 105, 90, 0.3);
+  color: var(--danger);
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(212, 105, 90, 0.2);
+  border-color: var(--danger);
+}
+
+/* ============================================================
+   Landing Page (Matching Screenshot Layout & Aesthetics)
+   ============================================================ */
+
+.landing-container {
+  min-height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  color: var(--paper);
+  position: relative;
+  overflow-y: auto;
+}
+
+.landing-topbar {
+  padding: 1.75rem 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.landing-brand .brand-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(79, 174, 145, 0.15);
+  border: 1px solid var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  box-shadow: 0 0 15px rgba(79, 174, 145, 0.2);
+}
+
+.landing-brand .brand-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.landing-brand .brand-name span {
+  color: var(--amber);
+  font-style: italic;
+}
+
+.landing-brand .brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--paper-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+}
+
+.landing-content {
+  flex: 1;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 2.5rem 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3.5rem;
+}
+
+/* Left Hero */
+.hero-section {
+  max-width: 580px;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  margin-bottom: 0.85rem;
+  font-weight: 600;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 2.9rem;
+  line-height: 1.16;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #94a3b8;
+  margin: 0 0 2rem;
+}
+
+.hero-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.hero-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.feature-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1.5px solid #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+/* Right Sign In Card */
+.signin-card {
+  width: 420px;
+  background: rgba(13, 20, 26, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 18px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), 0 0 30px rgba(56, 189, 248, 0.08);
+  animation: cardFadeIn 0.4s ease;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.signin-card .card-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.card-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.signin-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.4rem;
+}
+
+.signin-card p {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.9rem;
+  font-size: 0.9rem;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 0.75rem 0.9rem 0.75rem 2.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-family: var(--font-body);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.input-with-icon input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.05);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.toggle-pwd-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.25rem;
+}
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.remember-me input {
+  accent-color: #38bdf8;
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.forgot-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.signin-btn {
+  width: 100%;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.signin-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(37, 99, 235, 0.45);
+}
+
+.demo-credentials-box {
+  background: rgba(56, 189, 248, 0.06);
+  border: 1px dashed rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.demo-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #38bdf8;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.demo-credentials-box p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0 0 0.2rem;
+  text-align: left;
+}
+
+.demo-credentials-box code {
+  color: #e2e8f0;
+  font-family: var(--font-mono);
+}
+
+.quick-demo-btn {
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.55rem;
+  background: rgba(232, 166, 60, 0.15);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  border-radius: 7px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quick-demo-btn:hover {
+  background: rgba(232, 166, 60, 0.28);
+}
+
+.signup-prompt {
+  text-align: center;
+  font-size: 0.84rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+
+.signup-link-btn {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.84rem;
+}
+
+.signup-link-btn:hover {
+  text-decoration: underline;
+}
+
+.landing-footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive Landing Page */
+@media (max-width: 1024px) {
+  .landing-content {
+    flex-direction: column;
+    padding: 2rem;
+    gap: 3rem;
+  }
+  .hero-section {
+    max-width: 100%;
+    text-align: center;
+  }
+  .hero-features {
+    align-items: center;
+  }
+  .signin-card {
+    width: 100%;
+    max-width: 440px;
+  }
+}
+
