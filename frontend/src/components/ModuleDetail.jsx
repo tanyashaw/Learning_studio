@@ -49,6 +49,17 @@ function LessonCard({ lesson, index }) {
             </button>
             <div className={`lesson-content-body${open ? " lesson-content-body--open" : ""}`}>
               <p className="lesson-content-text">{lesson.content}</p>
+
+              {/* Practice Activity */}
+              {lesson.practiceActivity && (
+                <div className="practice-activity-block">
+                  <div className="practice-activity-label">
+                    <span>🧪</span> Practice Activity
+                  </div>
+                  <p className="practice-activity-text">{lesson.practiceActivity}</p>
+                </div>
+              )}
+
               {lesson.designRationale && (
                 <p className="lesson-rationale-text">
                   <span className="rationale-label">🎯 Design choice:</span> {lesson.designRationale}
@@ -125,6 +136,7 @@ export default function ModuleDetail({ module, index }) {
   const [picked, setPicked] = useState({});
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
+  const [glossaryOpen, setGlossaryOpen] = useState(false);
 
   const pick = (qIdx, optIdx) => {
     if (picked[qIdx] !== undefined) return;
@@ -141,6 +153,10 @@ export default function ModuleDetail({ module, index }) {
     ? module.explanationParagraphs
     : module.explanation
     ? [module.explanation]
+    : [];
+
+  const conceptEntries = module.conceptMap
+    ? Object.entries(module.conceptMap)
     : [];
 
   return (
@@ -160,7 +176,7 @@ export default function ModuleDetail({ module, index }) {
       <h2 className="module-title">{module.title}</h2>
 
       {/* ── Prerequisite pill ── */}
-      {module.prerequisite && module.prerequisite.toLowerCase() !== "none" && (
+      {module.prerequisite && !module.prerequisite.toLowerCase().startsWith("none") && (
         <div className="prereq-pill">
           <span className="prereq-icon">⚠</span>
           <span><strong>Prerequisite:</strong> {module.prerequisite}</span>
@@ -193,6 +209,45 @@ export default function ModuleDetail({ module, index }) {
                 <li key={i}>{outcome}</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* Key Takeaways */}
+        {Array.isArray(module.keyTakeaways) && module.keyTakeaways.length > 0 && (
+          <div className="key-takeaways-block">
+            <div className="takeaways-label">
+              <span>💡</span> Key Takeaways
+            </div>
+            <ul className="takeaways-list">
+              {module.keyTakeaways.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Concept Map / Glossary (collapsible) */}
+        {conceptEntries.length > 0 && (
+          <div className="concept-map-block">
+            <button
+              type="button"
+              className="glossary-toggle-btn"
+              onClick={() => setGlossaryOpen((v) => !v)}
+            >
+              <span>📖</span>
+              <span>Glossary ({conceptEntries.length} terms)</span>
+              <span className="glossary-chevron">{glossaryOpen ? "▲" : "▼"}</span>
+            </button>
+            {glossaryOpen && (
+              <dl className="concept-map-list">
+                {conceptEntries.map(([term, def], i) => (
+                  <div key={i} className="concept-map-entry">
+                    <dt className="concept-term">{term}</dt>
+                    <dd className="concept-def">{def}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
         )}
 

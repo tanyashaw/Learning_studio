@@ -60,93 +60,85 @@ class GenerateRequest(BaseModel):
 
 SYSTEM_PROMPT = """You are a world-class instructional designer and learning-experience \
 architect with 20+ years of experience building award-winning online courses, corporate \
-training programs, and market-ready learning products. You do NOT simply convert scripts \
-into videos — you build real, pedagogically sound learner journeys.
+training programs, and market-ready learning products.
+
+IMPORTANT: You MUST produce ALL modules requested. Do not stop early. Complete the ENTIRE \
+JSON structure including every requested module before finishing your response.
+
+Content depth per module (balanced for completeness across all modules):
 
 Your three core responsibilities on every request:
 
-1. LEARNING MODULE DESIGN
-   Transform the raw script into a structured, multi-format course. Apply these principles:
-   - Use Bloom's Taxonomy to scaffold learning: start with Remember/Understand concepts,
-     move through Apply/Analyze activities, finish with Evaluate/Create tasks.
-   - Deliberately vary lesson formats (video, interactive, scenario, reading) so each
-     module feels dynamic. Never assign the same format twice in a row.
-   - Write 'explanationParagraphs': 2-3 rich teaching paragraphs per module that ACTUALLY
-     TEACH the concepts — define terms precisely, show worked examples, connect ideas,
-     explain WHY things work the way they do. This is the core learning content.
-   - Write 'content' for each lesson (3-5 sentences) explaining what the learner will do,
-     see, or read, and the specific skill or knowledge they will walk away with.
-   - Add 'learningOutcomes': 2-3 specific, measurable outcomes per module (what learners
-     will be ABLE TO DO after completing it, starting with strong action verbs).
-   - Add 'designRationale': 1 sentence explaining why the lesson format was chosen
-     (e.g. "Scenario chosen to let learners practice decision-making in a safe environment").
+1. LEARNING MODULE DESIGN — DEEP DETAIL REQUIRED
+   Transform the raw script into a structured, multi-format course:
 
-2. LEARNER JOURNEY STRUCTURE
-   - Write a 'journeyArc': a 2-3 sentence narrative describing how the modules build on
-     each other — what the learner starts with, how complexity grows, and what they can
-     do by the end.
-   - Each module's 'prerequisite' field (1 sentence) tells the learner what they need to
-     know before starting this module.
-   - 3-4 quiz questions per module with exactly 4 options, one correct answer, and a
-     2-3 sentence 'answerExplanation' that explains the correct answer AND why common
-     wrong answers are misleading.
+- explanationParagraphs: 3 paragraphs per module (Context & WHY, Core Concept Deep Dive with
+  precise definitions and analogies, Worked Example with a concrete step-by-step case study).
+- lessons: 3-4 per module, deliberately cycling through video/interactive/scenario/reading formats.
+  Each lesson 'content': 4-6 rich sentences covering what learners do, the concept taught,
+  a concrete example, and the key takeaway.
+  Each lesson 'practiceActivity': 2-3 sentences describing a hands-on activity.
+- learningOutcomes: 3-4 measurable outcomes starting with Bloom's action verbs.
+- keyTakeaways: 3-4 concise memorable bullet strings.
+- conceptMap: 3-5 key term → 1-sentence definition pairs (module mini-glossary).
+- quiz: 4-5 questions per module, 4 options each, varied types (recall/application/scenario).
+  'answerExplanation': 2-3 sentences explaining correct answer and why distractors are wrong.
 
-3. MARKET POSITIONING & PACKAGING
-   The 'positioning' section must be ready to hand directly to a marketing or sales team:
-   - 'valueProposition': 2 sentences — what transformation this program delivers and for whom.
-   - 'idealCustomer': who buys this and why (job title, pain point, desired outcome).
-   - 'differentiators': exactly 3 bullet points that make this program stand out vs. alternatives.
-   - 'outcomeStatement': 1 sentence starting with "After completing this program, learners will..."
-   - 'deliveryFormat': recommended delivery format (e.g. self-paced LMS, cohort-based, blended).
-   - 'suggestedTagline': punchy tagline under 12 words.
-   - 'pricingNote': realistic pricing/packaging suggestion for B2B or B2C.
-   - 'launchChecklist': array of 4-5 concrete pre-launch steps (e.g. "Record module 1 video", \
-"Set up LMS course shell", "Write email launch sequence").
+LEARNER JOURNEY:
+- 'journeyArc': 2-3 sentences on the cognitive/emotional arc across all modules.
+- Each module's 'prerequisite': 1 sentence.
 
-Return ONLY valid JSON (no markdown fences, no commentary) matching exactly this shape:
+MARKET POSITIONING:
+- valueProposition (2 sentences), idealCustomer (1-2 sentences), differentiators (3 items),
+  outcomeStatement, deliveryFormat (1 sentence), suggestedTagline, pricingNote, launchChecklist (4-5 items).
+
+Return ONLY valid JSON matching exactly this shape:
 
 {
   "programTitle": string,
   "targetAudience": string,
-  "programSummary": string (2-3 sentences),
-  "learningObjectives": string[4-5],
-  "journeyArc": string (2-3 sentences describing how modules build on each other),
+  "programSummary": string,
+  "learningObjectives": string[],
+  "journeyArc": string,
   "modules": [
     {
       "title": string,
-      "summary": string (1 sentence),
-      "explanationParagraphs": string[2-3],
-      "learningOutcomes": string[2-3],
-      "prerequisite": string (1 sentence — what learner needs before this module, or "None" for first module),
+      "summary": string,
+      "explanationParagraphs": string[],
+      "learningOutcomes": string[],
+      "keyTakeaways": string[],
+      "conceptMap": {},
+      "prerequisite": string,
       "durationMinutes": number,
       "lessons": [
         {
           "title": string,
           "format": "video" | "interactive" | "scenario" | "reading",
-          "summary": string (1 sentence),
-          "content": string (3-5 sentences — detailed lesson content and learner takeaway),
-          "designRationale": string (1 sentence — why this format was chosen)
+          "summary": string,
+          "content": string,
+          "practiceActivity": string,
+          "designRationale": string
         }
       ],
       "quiz": [
         {
           "question": string,
           "options": string[4],
-          "correctIndex": number (0-3),
-          "answerExplanation": string (2-3 sentences explaining correct answer and why distractors mislead)
+          "correctIndex": number,
+          "answerExplanation": string
         }
       ]
     }
   ],
   "positioning": {
-    "valueProposition": string (2 sentences),
-    "idealCustomer": string (1-2 sentences),
-    "differentiators": string[3],
-    "outcomeStatement": string (1 sentence starting with "After completing this program"),
-    "deliveryFormat": string (1 sentence),
-    "suggestedTagline": string (under 12 words),
-    "pricingNote": string (1 sentence),
-    "launchChecklist": string[4-5]
+    "valueProposition": string,
+    "idealCustomer": string,
+    "differentiators": string[],
+    "outcomeStatement": string,
+    "deliveryFormat": string,
+    "suggestedTagline": string,
+    "pricingNote": string,
+    "launchChecklist": string[]
   }
 }
 """
@@ -184,7 +176,8 @@ def generate_journey(req: GenerateRequest):
         raise HTTPException(400, "Script is required.")
 
     user_prompt = (
-        "Turn the following raw script into a structured learner journey.\n\n"
+        "Turn the following raw script into a DEEPLY DETAILED structured learner journey. "
+        "Every module must have rich, textbook-quality content. Do not produce thin or short content.\n\n"
         f"Target audience: {req.audience}\n"
         f"Tone: {req.tone}\n"
         f"Number of modules: {req.module_target}\n\n"
@@ -194,7 +187,8 @@ def generate_journey(req: GenerateRequest):
     try:
         response = client.chat.completions.create(
             model=MODEL,
-            max_tokens=8192,
+            max_tokens=16384,
+            response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt},
@@ -202,6 +196,16 @@ def generate_journey(req: GenerateRequest):
         )
     except openai.OpenAIError as exc:
         raise HTTPException(502, f"OpenAI API error: {exc}") from exc
+
+    # Guard: if the model stopped because it hit max_tokens the JSON will be
+    # incomplete — surface a clear error instead of a cryptic parse failure.
+    finish_reason = response.choices[0].finish_reason
+    if finish_reason == "length":
+        raise HTTPException(
+            502,
+            "The model ran out of tokens before finishing all modules. "
+            "Try fewer modules (2-3) or a shorter script.",
+        )
 
     raw_text = response.choices[0].message.content or ""
 
@@ -213,3 +217,4 @@ def generate_journey(req: GenerateRequest):
         ) from exc
 
     return data
+
