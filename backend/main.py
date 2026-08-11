@@ -3,7 +3,7 @@ Learner Journey Studio — backend
 
 Takes a raw script and turns it into a well-structured, multi-module learner
 journey (modules -> lessons -> quiz) plus a market-positioning summary,
-using the Groq API.
+using the OpenAI API.
 """
 
 import json
@@ -17,24 +17,34 @@ from pydantic import BaseModel, Field
 
 load_dotenv()
 
-MODEL = "llama-3.3-70b-versatile"
+# Check for API Key (OpenAI preferred, Groq fallback)
+OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
+GROQ_KEY = os.environ.get("GROQ_API_KEY")
+
+API_KEY = OPENAI_KEY or GROQ_KEY
+
+if OPENAI_KEY:
+    MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o")
+    client = openai.OpenAI(api_key=OPENAI_KEY)
+elif GROQ_KEY:
+    MODEL = "llama-3.3-70b-versatile"
+    client = openai.OpenAI(
+        api_key=GROQ_KEY,
+        base_url="https://api.groq.com/openai/v1",
+    )
+else:
+    MODEL = "gpt-4o"
+    client = openai.OpenAI(api_key="missing")
 
 app = FastAPI(title="Learner Journey Studio API")
 
+# Allow all Cross-Origin (CORS) origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
-
-client = openai.OpenAI(
-    api_key=os.environ.get("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1",
 )
 
 
@@ -154,16 +164,21 @@ def _extract_json(raw_text: str) -> dict:
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "hasKey": bool(os.environ.get("GROQ_API_KEY"))}
+    return {
+        "status": "ok",
+        "hasKey": bool(API_KEY),
+        "model": MODEL,
+        "provider": "OpenAI" if OPENAI_KEY else ("Groq" if GROQ_KEY else "None"),
+    }
 
 
 @app.post("/api/generate-journey")
 def generate_journey(req: GenerateRequest):
-    if not os.environ.get("GROQ_API_KEY"):
+    if not API_KEY:
         raise HTTPException(
             500,
-            "GROQ_API_KEY is not set on the server. Add it to backend/.env "
-            "and restart the server.",
+            "Neither OPENAI_API_KEY nor GROQ_API_KEY is set on the server. "
+            "Add OPENAI_API_KEY to backend/.env and restart the server.",
         )
     if not req.script.strip():
         raise HTTPException(400, "Script is required.")
@@ -186,7 +201,7 @@ def generate_journey(req: GenerateRequest):
             ],
         )
     except openai.OpenAIError as exc:
-        raise HTTPException(502, f"Groq API error: {exc}") from exc
+        raise HTTPException(502, f"OpenAI API error: {exc}") from exc
 
     raw_text = response.choices[0].message.content or ""
 
