@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE="https://learning-studio-5neg.onrender.com" || "https://localhost:8000"
+
 
 export async function generateJourney({ script, audience, tone, moduleTarget }) {
   const res = await fetch(`${API_BASE}/api/generate-journey`, {
